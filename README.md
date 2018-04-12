@@ -2,7 +2,7 @@
 
 ***
 
-Project for the course of **Bachelor's Project** @ DETI-UA [2017].
+Project for the **Bachelor's Project** @ DETI-UA [2017].
 
 Project done in collaboration with Miriam Cardoso, Jorge Loureiro, Gil Mesquita and Ana Cunha.
 

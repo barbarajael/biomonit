@@ -1,0 +1,35 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+GET     /index.html                 controllers.Application.index
+GET     /login.html                 controllers.Application.login()
+POST    /login.html                 controllers.Application.authenticate()
+GET     /map.html                   controllers.Application.map()
+GET     /dashboard.html             controllers.Application.dashboard()
+POST    /dashboard.html             controllers.Application.startSensors()
+GET     /about_us.html              controllers.Application.aboutus()
+GET     /create_account.html        controllers.Application.createAccount()
+POST    /create_account.html        controllers.Application.newAccount()
+GET     /history.html               controllers.Application.history()
+GET     /profile.html               controllers.Application.profile()
+POST    /profile.html               controllers.Application.editprofile()
+GET     /getJson                    controllers.Application.getJson()
+GET     /getXml                     controllers.Application.getXml()
+GET     /admin_about_us.html        controllers.Application.admin_aboutus()
+GET     /admin_map.html             controllers.Application.admin_map()
+GET     /admin_edit_users.html      controllers.Application.admin_editusers()
+POST    /admin_edit_users.html      controllers.Application.deletePessoa()
+GET     /admin_profile.html         controllers.Application.admin_profile()
+GET     /admin_user_data.html       controllers.Application.admin_userdata()
+POST    /admin_user_data.html       controllers.Application.editPermission()
+GET     /admin_edit_sensors.html    controllers.Application.admin_editsensors()
+GET     /admin_removersensor.html   controllers.Application.admin_removesensor()
+POST    /admin_edit_sensors.html    controllers.Application.newSensor()
+POST    /admin_removersensor.html   controllers.Application.deleteSensor()
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+    

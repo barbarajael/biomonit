@@ -1,0 +1,432 @@
+@(title: String)
+
+@main(title) {
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="optimize for firedox">
+		<meta name="author" content="Bárbara, David, Filipa, Gil, Miriam">
+		<meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+		<title>BioMonit</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">
+		<!--external css-->
+		<link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/bootstrap-datepicker/css/datepicker.css")" />
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/bootstrap-daterangepicker/daterangepicker.css")" />
+
+		<!-- Custom styles for this template -->
+		<link href="@routes.Assets.at("stylesheets/style.css")" rel="stylesheet">
+		<link href="@routes.Assets.at("stylesheets/style-responsive.css")" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]-->
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+
+
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+		<script type="text/javascript">
+			google.charts.load('current', {'packages':['line']});
+			google.charts.setOnLoadCallback(drawCharts);
+
+			function drawCharts()
+			{
+				// --- prepare graph ---
+
+				// HEARTRATE
+				var heartrateData = new google.visualization.DataTable();
+				heartrateData.addColumn('datetime', 'timelapse');
+				heartrateData.addColumn('number', 'sensor1'); 	// TODO change name
+
+				// BRIGHTNESS
+				var brightnessData = new google.visualization.DataTable();
+				brightnessData.addColumn('datetime', 'timelapse');
+				brightnessData.addColumn('number', 'sensor1'); 	// TODO change name
+
+
+				// TEMPERATURE
+				var temperatureData = new google.visualization.DataTable();
+				temperatureData.addColumn('datetime', 'timelapse');
+				temperatureData.addColumn('number', 'sensor1'); 	// TODO change name
+
+
+				// to combine with other sensors
+				//data.addColumn('number', 'sensor2');
+				//data.addColumn('number', 'sensor3');
+
+
+				// ------------------------------------------------
+
+
+				// --- get array with temperature data ----
+
+				// HEARTRATE
+				var heartrate = @(Medidas.getMedidasWithoutZeros("00-00-00-00-00-00-00-E0-heartratePub"));
+
+				//var heartrateTimes = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-heartratePub"));
+				var heartrateTiming = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-heartratePub"));
+				var heartrateTimes = heartrateTiming.slice(-25);		// get the last 25 measurements
+
+
+				// BRIGHTNESS
+				var brightness = @(Medidas.getMedidasWithoutZeros("00-00-00-00-00-00-00-E0-brightnessPub"));
+
+				//var brightnessTimes = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-brightnessPub"));
+				var brightnessTiming = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-brightnessPub"));
+				var brightnessTimes = brightnessTiming.slice(-25);		// get the last 25 measurements
+
+
+				// TEMPERATURE
+				var temps = @(Medidas.getMedidasWithoutZeros("00-00-00-00-00-00-00-E0-temperaturePub"));
+
+				//var temperatureTimes = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-temperaturePub"));
+				var temperatureTiming = @(Medidas.getTimestampWithoutZeros("00-00-00-00-00-00-00-E0-temperaturePub"));
+				var temperatureTimes = temperatureTiming.slice(-25);	// get the last 25 measurements
+
+
+				// ------------------------------------------------
+
+
+				// --- add values to graph rows ---
+
+				// HEARTRATE sensor
+
+				var h;
+				var hrows = new Array();
+
+				// both temps and times should have the same length
+				for (h = 0; h < heartrateTimes.length; h++)
+				{
+					hrows.push([ new Date(heartrateTimes[h]), heartrate[h] ]);
+				}
+
+
+				// BRIGHTNESS sensor
+
+				var b;
+				var brows = new Array();
+
+				// both temps and times should have the same length
+				for (b = 0; b < brightnessTimes.length; b++)
+				{
+					brows.push([ new Date(brightnessTimes[b]), brightness[b] ]);
+				}
+
+
+				// TEMPERATURE sensor
+
+				var i;
+				var rows = new Array();
+
+				// both temps and times should have the same length
+				for (i = 0; i < temperatureTimes.length; i++)
+				{
+					rows.push([ new Date(temperatureTimes[i]), temps[i] ]);
+
+					// with more than one sensor
+					//rows.push([i, val, val+1, val+2]); 	// vals test only
+				}
+
+
+				// ------------------------------------------------
+
+
+				// --- draw graph ---
+
+				// HEARTRATE chart
+
+				heartrateData.addRows(hrows);
+
+				var heartrateOptions = {
+					chart: {
+						subtitle: '(in bpm)'
+					},
+
+					width: 900,
+					height: 500,
+
+					hAxis: {
+						format: 'dd/MM/yy \n HH:mm:ss',
+						gridlines: {count: 15}
+					}
+				};
+
+				var heartrateChart = new google.charts.Line(document.getElementById('linechart_heartrate'));
+				heartrateChart.draw(heartrateData, google.charts.Line.convertOptions(heartrateOptions));
+
+
+				// BRIGHTNESS
+
+				brightnessData.addRows(brows);
+
+				var brightnessOptions = {
+					chart: {
+						subtitle: '(in %)'
+					},
+
+					width: 900,
+					height: 500,
+
+					hAxis: {
+						format: 'dd/MM/yy \n HH:mm:ss',
+						gridlines: {count: 15}
+					}
+				};
+
+				var brightnessChart = new google.charts.Line(document.getElementById('linechart_brightness'));
+				brightnessChart.draw(brightnessData, google.charts.Line.convertOptions(brightnessOptions));
+
+
+				// TEMPERATURE chart
+
+				temperatureData.addRows(rows);
+
+				var TemperatureOptions = {
+					chart: {
+						subtitle: '(in Celsius)'
+					},
+
+					width: 900,
+					height: 500,
+
+					hAxis: {
+						format: 'dd/MM/yy \n HH:mm:ss',
+						gridlines: {count: 15}
+					}
+				};
+
+				var chart = new google.charts.Line(document.getElementById('linechart_temperature'));
+				chart.draw(temperatureData, google.charts.Line.convertOptions(TemperatureOptions));
+			}
+		</script>
+
+	</head>
+
+
+	<body onload="hideAll('linechart_heartrate', 'linechart_brightness', 'linechart_temperature')">
+		<section id="container" >
+			<!-- **********************************************************************************************************************************************************
+			TOP BAR CONTENT & NOTIFICATIONS
+			*********************************************************************************************************************************************************** -->
+			<header class="header black-bg">
+				<div class="sidebar-toggle-box">
+					<div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+				</div>
+
+				<!-- name/logo -->
+				<a href="dashboard.html" class="logo" style="padding-left: 20px">
+					<img src="https://scontent.flis7-1.fna.fbcdn.net/v/t31.0-8/18839845_10213499499471810_1127543962238528129_o.jpg?oh=bedb5c360307025fa80b2ec94b138e24&oe=59ABC4A7"
+						 style="height: 50px; padding-bottom: 5px; margin-top: -5px">
+				</a>
+
+				<!-- logout button -->
+				<div class="top-menu">
+					<ul class="nav pull-right top-menu">
+						<li><a class="logout" href="login.html">Logout</a></li>
+					</ul>
+				</div>
+			</header>
+
+
+			<!-- **********************************************************************************************************************************************************
+			MAIN SIDEBAR MENU (left side)
+			*********************************************************************************************************************************************************** -->
+			<aside>
+				<div id="sidebar" class="nav-collapse ">
+					<ul class="sidebar-menu" id="nav-accordion">
+
+						<!-- image and name -->
+						<div class="content">
+							<br>
+							<h5 align="center" style="color: #f2f2f2;">@(Pessoa.sendNameInfo())</h5>
+						</div>
+
+
+						<li class="mt">
+							<a href="dashboard.html">
+								<i class="fa fa-dashboard"></i>
+								<span>Measurements</span>
+							</a>
+						</li>
+
+						<li class="sub-menu">
+							<a class="active" href="history.html">
+								<i class="fa fa-bar-chart-o"></i>
+								<span>History</span>
+							</a>
+						</li>
+
+						<li class="sub-menu">
+							<a href="map.html">
+								<i class="fa fa-globe"></i>
+								<span>Map</span>
+							</a>
+						</li>
+
+						<li class="sub-menu">
+							<a href="profile.html">
+								<i class="fa fa-cogs"></i>
+								<span>Profile</span>
+							</a>
+						</li>
+
+						<li class="mt">
+							<a href="about_us.html">
+								<i class="fa fa-book"></i>
+								<span>About</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</aside>
+
+
+			<!-- **********************************************************************************************************************************************************
+			MAIN CONTENT
+			*********************************************************************************************************************************************************** -->
+
+			<section id="main-content">
+				<section class="wrapper">
+
+					<h3><i class="fa fa-angle-right"></i> History</h3>
+
+					<div class="row mt">
+						<div class="col-lg-12">
+
+							<!-- HEART RATE -->
+							<div class="form-panel">
+								<!-- TITLE -->
+								<div onclick="toggleContChart(this)">
+									<h4>Heartrate &nbsp; <i class="fa fa-angle-down"></i></h4>
+								</div>
+
+								<!-- GRAPH -->
+								<div id="linechart_heartrate" align="center"
+									 style="padding-top: 10px; padding-bottom: 10px"></div>
+
+								<br><br><br>
+
+								<!-- BUTTONS TO EXTRACT -->
+								<div style="text-align: center;">
+									<div class="btn-group">
+										<form action="@routes.Application.getJson()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto" action="@{Application.getJson()}"> EXPORT JSON </button>
+										</form>
+									</div>
+
+									<div class="btn-group" style="padding-left: 25px">
+										<form action="@routes.Application.getXml()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto"> EXPORT XML </button>
+										</form>
+									</div>
+								</div>
+
+								<br>
+							</div>
+
+
+							<br>
+
+
+							<!-- BRIGHTNESS -->
+							<div class="form-panel">
+								<!-- TITLE -->
+								<div onclick="toggleContChart(this)">
+									<h4>Brightness &nbsp; <i class="fa fa-angle-down"></i></h4>
+								</div>
+
+								<!-- GRAPH -->
+								<div id="linechart_brightness" align="center"
+									 style="padding-top: 10px; padding-bottom: 10px"></div>
+
+								<br><br><br>
+
+								<!-- BUTTONS TO EXTRACT -->
+								<div style="text-align: center;">
+									<div class="btn-group">
+										<form action="@routes.Application.getJson()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto" action="@{Application.getJson()}"> EXPORT JSON </button>
+										</form>
+									</div>
+
+									<div class="btn-group" style="padding-left: 25px">
+										<form action="@routes.Application.getXml()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto"> EXPORT XML </button>
+										</form>
+									</div>
+								</div>
+
+								<br>
+							</div>
+
+
+							<br>
+
+
+							<!-- TEMPERATURE -->
+							<div class="form-panel">
+								<!-- TITLE -->
+								<div onclick="toggleContChart(this)">
+									<h4>Temperature &nbsp; <i class="fa fa-angle-down"></i></h4>
+								</div>
+
+								<!-- GRAPH -->
+								<div id="linechart_temperature" align="center"
+									 style="padding-top: 10px; padding-bottom: 10px"></div>
+
+								<br><br><br>
+
+								<!-- BUTTONS TO EXTRACT -->
+								<div style="text-align: center;">
+									<div class="btn-group">
+										<form action="@routes.Application.getJson()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto" action="@{Application.getJson()}"> EXPORT JSON </button>
+										</form>
+									</div>
+
+									<div class="btn-group" style="padding-left: 25px">
+										<form action="@routes.Application.getXml()" method="get">
+											<button class="btn btn-theme btn-block" style="width: 200px; margin: 0 auto"> EXPORT XML </button>
+										</form>
+									</div>
+								</div>
+
+								<br>
+							</div>
+
+						</div>
+					</div>
+
+				</section>
+			</section>
+
+		</section>
+
+
+		<!-- js placed at the end of the document so the pages load faster -->
+		<script src="@routes.Assets.at("javascripts/jquery.js")"></script>
+		<script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+		<script class="include" type="text/javascript" src="@routes.Assets.at("javascripts/jquery.dcjqaccordion.2.7.js")"></script>
+		<script src="@routes.Assets.at("javascripts/jquery.scrollTo.min.js")"></script>
+		<script src="@routes.Assets.at("javascripts/jquery.nicescroll.js")" type="text/javascript"></script>
+
+
+		<!-- common script for all pages -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+		<script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+		<script src="@routes.Assets.at("javascripts/common-scripts.js")"></script>
+
+		<!--script for this page-->
+		<script type="text/javascript" src="@routes.Assets.at("siteJquery.js")"></script>
+
+	</body>
+</html>
+}

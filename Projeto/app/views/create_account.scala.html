@@ -1,0 +1,100 @@
+@(userFrom: play.data.Form[gen_user])
+
+@main("User form") {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="optimize for firedox">
+	<meta name="author" content="Bárbara, David, Filipa, Gil, Miriam">
+	<meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+	<title>BioMonit</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">
+	<!--external css-->
+	<link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet" />
+
+	<!-- Custom styles for this template -->
+	<link href="@routes.Assets.at("stylesheets/style.css")" rel="stylesheet">
+	<link href="@routes.Assets.at("stylesheets/style-responsive.css")" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+	@helper.form(routes.Application.newAccount) {
+		<header class="header black-bg">
+			<a href="index.html" class="logo">
+				<img src="https://scontent.flis7-1.fna.fbcdn.net/v/t31.0-8/18839845_10213499499471810_1127543962238528129_o.jpg?oh=bedb5c360307025fa80b2ec94b138e24&oe=59ABC4A7"
+					 style="height: 50px; padding-bottom: 5px; margin-top: -5px">
+			</a>
+		</header>
+		
+
+		<!-- **********************************************************************************************************************************************************
+      	MAIN CONTENT
+      	*********************************************************************************************************************************************************** -->
+		<div class="container" style="padding-top: 75px; padding-left: 100px; padding-right: 100px">
+			<form class="form-login">
+				<h2 class="form-login-heading">Create account</h2>
+
+				<div class="login-wrap">
+					<td><label>Name: </label></td>
+					<input id="nome" type="text" class="form-control" placeholder="First & Last name" name="nome" autofocus>
+		          	
+		            <br>
+		            
+		            <td><label>E-mail: </label></td>
+		            <input id="utilizador" type="email" name="utilizador" class="form-control" placeholder="Email" autofocus>
+		            
+		            <br>
+		            
+		            <td><label>Password: </label></td>
+		            <input id="pass" type="password" name="pass" class="form-control" placeholder="Password">
+		            
+		            <br>
+		            
+		            <td><label>Confirm Password: </label></td>
+		            <input id="CApass2" type="password" name="passconf" class="form-control" placeholder="Confirm Password">
+		         	
+		         	<br><br><br>
+
+					<div align="center">
+						<button id="CAsubmitBtn" class="btn btn-theme btn-block"
+								type="submit" style="display: inline; width: 30%; height: 40px">
+							Submit
+						</button>
+						<button id="CAcancelBtn" data-dismiss="modal" class="btn btn-theme btn-block"
+								type="button" style="display: inline; width: 30%; margin-left: 10%; height: 40px">
+							Cancel
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	}
+
+
+		<!-- js placed at the end of the document so the pages load faster -->
+		<script src="@routes.Assets.at("javascripts/jquery.js")"></script>
+		<script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+
+		<script type="text/javascript" src="@routes.Assets.at("siteJquery.js")"></script>
+
+		<!--BACKSTRETCH-->
+		<!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+		<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.backstretch.min.js")"></script>
+		<script>
+			$.backstretch("@routes.Assets.at("images/opening/biomedical.jpg")", {speed: 500});
+		</script>
+
+	</body>
+</html>
+}

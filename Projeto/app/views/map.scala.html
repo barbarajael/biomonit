@@ -1,0 +1,200 @@
+@(title: String)
+
+@main(title) {
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="optimize for firedox">
+		<meta name="author" content="Bárbara, David, Filipa, Gil, Miriam">
+		<meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+		<title>BioMonit</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="@routes.Assets.at("stylesheets/bootstrap.css")" rel="stylesheet">
+		<!--external css-->
+		<link href="@routes.Assets.at("font-awesome/css/font-awesome.css")" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/bootstrap-datepicker/css/datepicker.css")" />
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("javascripts/bootstrap-daterangepicker/daterangepicker.css")" />
+
+		<!-- Custom styles for this template -->
+		<link href="assets/css/style.css" rel="stylesheet">
+		<link href="assets/css/style-responsive.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="@routes.Assets.at("stylesheets/style.css")" rel="stylesheet">
+		<link href="@routes.Assets.at("stylesheets/style-responsive.css")" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+
+
+	</head>
+
+	<body>
+	  	<section id="container" >
+			<!-- **********************************************************************************************************************************************************
+			TOP BAR CONTENT & NOTIFICATIONS
+			*********************************************************************************************************************************************************** -->
+		  	<header class="header black-bg">
+				<div class="sidebar-toggle-box">
+					<div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+				</div>
+
+				<!-- name/logo -->
+				<a href="dashboard.html" class="logo" style="padding-left: 20px">
+					<img src="https://scontent.flis7-1.fna.fbcdn.net/v/t31.0-8/18839845_10213499499471810_1127543962238528129_o.jpg?oh=bedb5c360307025fa80b2ec94b138e24&oe=59ABC4A7"
+						 style="height: 50px; padding-bottom: 5px; margin-top: -5px">
+				</a>
+
+				<!-- logout button -->
+				<div class="top-menu">
+					<ul class="nav pull-right top-menu">
+						<li><a class="logout" href="login.html">Logout</a></li>
+					</ul>
+				</div>
+			</header>
+		  
+
+		  	<!-- **********************************************************************************************************************************************************
+		  	MAIN SIDEBAR MENU (left side)
+		  	*********************************************************************************************************************************************************** -->
+		  	<aside>
+			  	<div id="sidebar" class="nav-collapse ">
+				  	<ul class="sidebar-menu" id="nav-accordion">
+				  
+				  		<!-- image and name -->
+					  	<div class="content">
+							<br>
+							<h5 align="center" style="color: #f2f2f2;">@(Pessoa.sendNameInfo())</h5>
+					  	</div>
+						
+
+					  	<li class="mt">
+						  	<a href="dashboard.html">
+							  	<i class="fa fa-dashboard"></i>
+							  	<span>Measurements</span>
+						  	</a>
+					  	</li>
+
+					  	<li class="sub-menu">
+						  	<a href="history.html">
+							  	<i class="fa fa-bar-chart-o"></i>
+							  	<span>History</span>
+						  	</a>
+					  	</li>
+
+					  	<li class="sub-menu">
+						  	<a class="active" href="map.html">
+							  	<i class="fa fa-globe"></i>
+							  	<span>Map</span>
+						  	</a>
+					  	</li>
+
+					  	<li class="sub-menu">
+						  	<a href="profile.html">
+							  	<i class="fa fa-cogs"></i>
+							  	<span>Profile</span>
+						  	</a>
+					  	</li>
+
+					  	<li class="mt">
+						  	<a href="about_us.html">
+						  		<i class="fa fa-book"></i>
+							  	<span>About</span>
+						  	</a>
+					  	</li>
+				  	</ul>
+			  	</div>
+		  	</aside>
+		  
+
+		  	<!-- **********************************************************************************************************************************************************
+		  	MAIN CONTENT
+		  	*********************************************************************************************************************************************************** -->
+
+		  	<section id="main-content">
+				<section class="wrapper">
+					<h3><i class="fa fa-angle-right"></i> Map</h3>
+					<div id="googleMap" style="width:900px; height: 500px;"></div>
+
+
+					<script>
+
+					function myMap() {
+
+						var mapProp= {
+						    center:new google.maps.LatLng(40.632183, -8.661800),
+						    zoom: 12,
+						};
+						var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+						var loc = @(Medidas.getLocalFromSensors());
+						var i;
+                        var imageg = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+                        var imager = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+
+						for(i=0;i<loc.length;i++)
+						{
+						    var current = {lat: loc[i], lng: loc[i+1]};
+						    var namesensor= "sensor: "+i;
+
+						    if(loc[i+2]=="0") {
+                                new google.maps.Marker({
+                                    position: current,
+                                    map: map,
+                                    title: namesensor,
+                                    icon: imager
+                                });
+                            }
+                            else {
+                                new google.maps.Marker({
+                                    position: current,
+                                    map: map,
+                                    title: namesensor,
+                                    icon: imageg
+                                });
+                            }
+
+						    i+=2;
+                        }
+					}
+					
+					</script>
+
+
+
+
+				</section>
+			</section>
+
+		</section>
+
+
+		<!-- js placed at the end of the document so the pages load faster -->
+		<script src="@routes.Assets.at("javascripts/jquery.js")"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+		<script class="include" type="text/javascript" src="@routes.Assets.at("javascripts/jquery.dcjqaccordion.2.7.js")"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.scrollTo.min.js")"></script>
+		<script src="@routes.Assets.at("javascripts/jquery.nicescroll.js")" type="text/javascript"></script>
+
+        <!--map-->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBG6UgNQHTmNjLQB4mnnLc5ej_VDduvl1w&callback=myMap"></script>
+
+		<!--common script for all pages-->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+		<script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+		<script src="@routes.Assets.at("javascripts/common-scripts.js")"></script>
+
+        <!--script for this page-->
+        <script type="text/javascript" src="@routes.Assets.at("siteJquery.js")"></script>
+
+	</body>
+</html>
+}
